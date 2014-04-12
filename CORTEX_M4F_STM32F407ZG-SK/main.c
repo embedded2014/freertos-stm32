@@ -159,7 +159,6 @@ static void LEDTask( void *pvParameters)
 
 static void ButtonTask( void *pvParameters )
 {
-	STM_EVAL_PBInit( BUTTON_USER, BUTTON_MODE_GPIO );
 	STM_EVAL_LEDInit( LED3 );
 	
 	while(1) {
@@ -171,13 +170,57 @@ static void ButtonTask( void *pvParameters )
 	}
 }
 
+static void LCDTask( void *pvParameters )
+{
+	LCD_Init();
+	LCD_LayerInit();
+	IOE_Config();
+	LTDC_Cmd( ENABLE );
+	LCD_SetLayer(LCD_FOREGROUND_LAYER);
+	LCD_Clear(LCD_COLOR_RED);
+	LCD_DrawLine( 0x50, 0x50, 0x50, 0x0000 );
+	LCD_DisplayStringLine(LCD_LINE_6,(uint8_t*)"Hello World");
+
+	while(1){
+
+		if( IOE_TP_GetState()->TouchDetected ){
+			LCD_Clear(LCD_COLOR_BLUE);
+			LCD_DisplayStringLine(LCD_LINE_6,(uint8_t*)"Foooo");
+			while( IOE_TP_GetState()->TouchDetected );
+		}
+	}
+}
+
+static void LCDTaskX( void *pvParameters )
+{
+	LCD_Init();
+	LCD_LayerInit();
+	IOE_Config();
+	LTDC_Cmd( ENABLE );
+	LCD_SetLayer(LCD_FOREGROUND_LAYER);
+	LCD_Clear(LCD_COLOR_MAGENTA);
+	LCD_DrawLine( 0x50, 0x50, 0x50, 0x0000 );
+	LCD_DisplayStringLine(LCD_LINE_6,(uint8_t*)"Kyoka!");
+
+	while(1){
+	}
+}
+
 //Main Function
 int main(void)
 {
-	//Create Task For USART
-	xTaskCreate(UsartTask, (signed char*)"UsartTask", 128, NULL, tskIDLE_PRIORITY+1, NULL);
-	/*xTaskCreate(LEDTask, (signed char*)"LEDTask", 128, NULL, tskIDLE_PRIORITY+1, NULL);*/
-	xTaskCreate(ButtonTask, (signed char*)"ButtonTask", 128, NULL, tskIDLE_PRIORITY+1, NULL);
+	STM_EVAL_PBInit( BUTTON_USER, BUTTON_MODE_GPIO );
+
+	if( STM_EVAL_PBGetState(BUTTON_USER) ){
+		xTaskCreate(LCDTaskX, (signed char*)"LCDTaskX", 128, NULL, tskIDLE_PRIORITY+1, NULL);
+	}
+	else{
+		//Create Task For USART
+		xTaskCreate(UsartTask, (signed char*)"UsartTask", 128, NULL, tskIDLE_PRIORITY+1, NULL);
+		/*xTaskCreate(LEDTask, (signed char*)"LEDTask", 128, NULL, tskIDLE_PRIORITY+1, NULL);*/
+		xTaskCreate(ButtonTask, (signed char*)"ButtonTask", 128, NULL, tskIDLE_PRIORITY+1, NULL);
+		xTaskCreate(LCDTask, (signed char*)"LCDTask", 128, NULL, tskIDLE_PRIORITY+1, NULL);
+	}
 
 	//Call Scheduler
 	vTaskStartScheduler();
