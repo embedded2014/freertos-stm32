@@ -87,6 +87,10 @@ OBJS += \
     $(PWD)/Utilities/STM32F429I-Discovery/stm32f429i_discovery_lcd.o \
     $(PWD)/Utilities/STM32F429I-Discovery/stm32f429i_discovery_ioe.o
 
+#Game
+OBJS += $(PWD)/CORTEX_M4F_STM32F407ZG-SK/game/game.o
+CFLAGS += -I $(PWD)/CORTEX_M4F_STM32F407ZG-SK/game
+
 CFLAGS += -DUSE_STDPERIPH_DRIVER
 CFLAGS += -I $(PWD)/CORTEX_M4F_STM32F407ZG-SK \
 	  -I $(PWD)/include \

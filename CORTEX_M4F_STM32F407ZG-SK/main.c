@@ -27,12 +27,14 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "game.h"
 
 #include "FreeRTOS.h"
 #include "task.h"
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 /** @addtogroup Template
   * @{
   */ 
@@ -42,97 +44,6 @@
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 
-void RCC_Configuration(void)
-{
-      /* --------------------------- System Clocks Configuration -----------------*/
-      /* USART2 clock enable */
-      RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART2, ENABLE);
-      /* GPIOA clock enable */
-      RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);
-}
- 
-/**************************************************************************************/
- 
-void GPIO_Configuration(void)
-{
-    GPIO_InitTypeDef GPIO_InitStructure;
-
-    /*-------------------------- GPIO Configuration ----------------------------*/
-    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_9 | GPIO_Pin_10;
-    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
-    GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-    GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
-    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-    GPIO_Init(GPIOA, &GPIO_InitStructure);
-
-    /* Connect USART pins to AF */
-    GPIO_PinAFConfig(GPIOA, GPIO_PinSource9, GPIO_AF_USART2);   // USART2_TX
-    GPIO_PinAFConfig(GPIOA, GPIO_PinSource10, GPIO_AF_USART2);  // USART2_RX
-}
- 
-/**************************************************************************************/
- 
-void USART2_Configuration(void)
-{
-    USART_InitTypeDef USART_InitStructure;
-
-    /* USARTx configuration ------------------------------------------------------*/
-    /* USARTx configured as follow:
-     *  - BaudRate = 9600 baud
-     *  - Word Length = 8 Bits
-     *  - One Stop Bit
-     *  - No parity
-     *  - Hardware flow control disabled (RTS and CTS signals)
-     *  - Receive and transmit enabled
-     */
-    USART_InitStructure.USART_BaudRate = 9600;
-    USART_InitStructure.USART_WordLength = USART_WordLength_8b;
-    USART_InitStructure.USART_StopBits = USART_StopBits_1;
-    USART_InitStructure.USART_Parity = USART_Parity_No;
-    USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
-    USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
-    USART_Init(USART2, &USART_InitStructure);
-    USART_Cmd(USART2, ENABLE);
-}
-
-void USART2_puts(char* s)
-{
-    while(*s) {
-        while(USART_GetFlagStatus(USART2, USART_FLAG_TXE) == RESET);
-        USART_SendData(USART2, *s);
-        s++;
-    }
-}
-
-/**************************************************************************************/
-/*int main(void)*/
-/*{*/
-	/*RCC_Configuration();*/
-	/*GPIO_Configuration();*/
-	/*USART2_Configuration();*/
-
-	/*USART2_puts("Hello World!\r\n");*/
-	/*USART2_puts("Just for STM32F429I Discovery verify USART2 with USB TTL Cable\r\n");*/
-	/*while(1)*/
-	/*{*/
-		/*while(USART_GetFlagStatus(USART2, USART_FLAG_RXNE) == RESET);*/
-		/*char t = USART_ReceiveData(USART2);*/
-		/*if ((t == '\r')) {*/
-			/*while(USART_GetFlagStatus(USART2, USART_FLAG_TXE) == RESET);*/
-			/*USART_SendData(USART2, t);*/
-			/*t = '\n';*/
-		/*}*/
-		/*while(USART_GetFlagStatus(USART2, USART_FLAG_TXE) == RESET);*/
-		/*USART_SendData(USART2, t);*/
-	/*}*/
-
-	/*while(1); // Don't want to exit*/
-/*}*/
-
-void busyloop( uint32_t delay )
-{
-	while( delay )	delay--;
-}
 
 const TickType_t xDelay = 100 / portTICK_PERIOD_MS;
 
@@ -184,43 +95,73 @@ static void LCDTask( void *pvParameters )
 	while(1){
 
 		if( IOE_TP_GetState()->TouchDetected ){
+			uint8_t* tickPerMs =  portTICK_PERIOD_MS;
 			LCD_Clear(LCD_COLOR_BLUE);
-			LCD_DisplayStringLine(LCD_LINE_6,(uint8_t*)"Foooo");
+			LCD_DisplayStringLine(LCD_LINE_6,(uint8_t*)tickPerMs);
 			while( IOE_TP_GetState()->TouchDetected );
 		}
 	}
 }
 
-static void LCDTaskX( void *pvParameters )
+void
+prvInit()
 {
+	//LCD init
 	LCD_Init();
-	LCD_LayerInit();
 	IOE_Config();
 	LTDC_Cmd( ENABLE );
-	LCD_SetLayer(LCD_FOREGROUND_LAYER);
-	LCD_Clear(LCD_COLOR_MAGENTA);
-	LCD_DrawLine( 0x50, 0x50, 0x50, 0x0000 );
-	LCD_DisplayStringLine(LCD_LINE_6,(uint8_t*)"Kyoka!");
 
-	while(1){
+	LCD_LayerInit();
+	LCD_SetLayer( LCD_FOREGROUND_LAYER );
+	LCD_Clear( LCD_COLOR_BLACK );
+	LCD_SetTextColor( LCD_COLOR_WHITE );
+
+	//Button
+	STM_EVAL_PBInit( BUTTON_USER, BUTTON_MODE_GPIO );
+
+	//LED
+	STM_EVAL_LEDInit( LED3 );
+}
+
+static void GameEventTask1( void *pvParameters )
+{
+	while( 1 ){
+		GAME_EventHandler1();
+	}
+}
+
+static void GameEventTask2( void *pvParameters )
+{
+	while( 1 ){
+		GAME_EventHandler2();
+	}
+}
+
+static void GameEventTask3( void *pvParameters )
+{
+	while( 1 ){
+		GAME_EventHandler3();
+	}
+}
+
+static void GameTask( void *pvParameters )
+{
+	while( 1 ){
+		GAME_Update();
+		GAME_Render();
+		vTaskDelay( 10 );
 	}
 }
 
 //Main Function
 int main(void)
 {
-	STM_EVAL_PBInit( BUTTON_USER, BUTTON_MODE_GPIO );
+	prvInit();
 
-	if( STM_EVAL_PBGetState(BUTTON_USER) ){
-		xTaskCreate(LCDTaskX, (signed char*)"LCDTaskX", 128, NULL, tskIDLE_PRIORITY+1, NULL);
-	}
-	else{
-		//Create Task For USART
-		xTaskCreate(UsartTask, (signed char*)"UsartTask", 128, NULL, tskIDLE_PRIORITY+1, NULL);
-		/*xTaskCreate(LEDTask, (signed char*)"LEDTask", 128, NULL, tskIDLE_PRIORITY+1, NULL);*/
-		xTaskCreate(ButtonTask, (signed char*)"ButtonTask", 128, NULL, tskIDLE_PRIORITY+1, NULL);
-		xTaskCreate(LCDTask, (signed char*)"LCDTask", 128, NULL, tskIDLE_PRIORITY+1, NULL);
-	}
+	xTaskCreate( GameTask, (signed char*) "GameTask", 128, NULL, tskIDLE_PRIORITY + 1, NULL );
+	xTaskCreate( GameEventTask1, (signed char*) "GameEventTask1", 128, NULL, tskIDLE_PRIORITY + 1, NULL );
+	xTaskCreate( GameEventTask2, (signed char*) "GameEventTask2", 128, NULL, tskIDLE_PRIORITY + 1, NULL );
+	xTaskCreate( GameEventTask3, (signed char*) "GameEventTask3", 128, NULL, tskIDLE_PRIORITY + 1, NULL );
 
 	//Call Scheduler
 	vTaskStartScheduler();
