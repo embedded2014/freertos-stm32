@@ -74,7 +74,6 @@ GAME_EventHandler3()
 	if( ballIsRun == 0 ){
 		BallReset();
 	}
-
 }
 
 void
@@ -178,8 +177,6 @@ GAME_Update()
 			else
 				BallReset();
 		}
-
-
 	}
 }
 

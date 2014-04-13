@@ -44,65 +44,6 @@
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 
-
-const TickType_t xDelay = 100 / portTICK_PERIOD_MS;
-
-static void UsartTask(void *pvParameters)
-{
-	STM_EVAL_LEDInit( LED4 );
-
-	for( ;; )
-	{
-		vTaskDelay( xDelay );
-		STM_EVAL_LEDToggle( LED4 );
-	}
-}
-
-static void LEDTask( void *pvParameters)
-{
-	STM_EVAL_LEDInit( LED3 );
-
-	for(;;){
-			STM_EVAL_LEDToggle(LED3);
-			vTaskDelay( xDelay );
-	}
-}
-
-static void ButtonTask( void *pvParameters )
-{
-	STM_EVAL_LEDInit( LED3 );
-	
-	while(1) {
-		if( STM_EVAL_PBGetState( BUTTON_USER ) ){
-			STM_EVAL_LEDOn( LED3 );
-			while( STM_EVAL_PBGetState( BUTTON_USER ) );
-			STM_EVAL_LEDOff( LED3 );
-		}
-	}
-}
-
-static void LCDTask( void *pvParameters )
-{
-	LCD_Init();
-	LCD_LayerInit();
-	IOE_Config();
-	LTDC_Cmd( ENABLE );
-	LCD_SetLayer(LCD_FOREGROUND_LAYER);
-	LCD_Clear(LCD_COLOR_RED);
-	LCD_DrawLine( 0x50, 0x50, 0x50, 0x0000 );
-	LCD_DisplayStringLine(LCD_LINE_6,(uint8_t*)"Hello World");
-
-	while(1){
-
-		if( IOE_TP_GetState()->TouchDetected ){
-			uint8_t* tickPerMs =  portTICK_PERIOD_MS;
-			LCD_Clear(LCD_COLOR_BLUE);
-			LCD_DisplayStringLine(LCD_LINE_6,(uint8_t*)tickPerMs);
-			while( IOE_TP_GetState()->TouchDetected );
-		}
-	}
-}
-
 void
 prvInit()
 {
