@@ -43,6 +43,7 @@
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
+extern uint8_t demoMode;
 
 void
 prvInit()
@@ -98,6 +99,9 @@ static void GameTask( void *pvParameters )
 int main(void)
 {
 	prvInit();
+
+	if( STM_EVAL_PBGetState( BUTTON_USER ) )
+		demoMode = 1;
 
 	xTaskCreate( GameTask, (signed char*) "GameTask", 128, NULL, tskIDLE_PRIORITY + 1, NULL );
 	xTaskCreate( GameEventTask1, (signed char*) "GameEventTask1", 128, NULL, tskIDLE_PRIORITY + 1, NULL );
