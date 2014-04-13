@@ -188,10 +188,26 @@ GAME_Update()
 
 			//Player1 move
 			if( ballVY < 0 ){
-				if( player1X + player1W/2 < ballX + ballSize/2 )
+				if( player1X + player1W/2 < ballX + ballSize/2 ){
 					player1X += 8;
-				else
+					player2X += 2;
+				}
+				else{
 					player1X -= 8;
+					player2X -= 2;
+				}
+			}
+
+			//Player2 move
+			if( ballVY > 0 ){
+				if( player2X + player2W/2 < ballX + ballSize/2 ){
+					player1X += 2;
+					player2X += 8;
+				}
+				else{
+					player1X -= 2;
+					player2X -= 8;
+				}
 
 			}
 
@@ -199,15 +215,6 @@ GAME_Update()
 				player1X = 0;
 			else if( player1X + player1W >= LCD_PIXEL_WIDTH )
 				player1X = LCD_PIXEL_WIDTH - player1W;
-
-			//Player2 move
-			if( ballVY > 0 ){
-				if( player2X + player2W/2 < ballX + ballSize/2 )
-					player2X += 8;
-				else
-					player2X -= 8;
-
-			}
 
 			if( player2X <= 0 )
 				player2X = 0;
