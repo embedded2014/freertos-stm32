@@ -90,25 +90,9 @@ static int CheckOppositeDirCars(struct graph_info *g_ptr, int dir,
 	/* Check if it is the vertical or horizontal direction. */
 	val = (dir <= CAR_V_UP ? g_ptr->y : g_ptr->x);
 
-
-	/* Stop the cars with Red traffic light. */
-	if (distance > 0) {
-		/* Those cars are not behind a red light, so keep moving. */
-		if (val > limit) 
-			return 0;
-
-		/* Those cars are behind a red light, so stop moving. */ 
-		if (val + distance >= limit) 
-			return 1;
-	} else {
-		/* Those cars are not behind a red light, so keep moving. */
-		if (val < limit) 
-			return 0;
-
-		/* Those cars are behind a red light, so stop moving. */ 
-		if (val + distance <= limit) 
-			return 1;
-	}
+	/* This car is behind a red light, so stop moving. */
+	if (val + distance == limit) 
+		return 1;
 
 	/* This for-loop scan if cars are overlapping. */
 	for (c_ptr=cars_all[dir];c_ptr->car_graph.wl.width;c_ptr++) {
@@ -302,5 +286,4 @@ void MoveCar(int traffic_v_state, int traffic_h_state)
 
 		}
 	}
-
 }
