@@ -82,14 +82,16 @@ OBJS += \
     $(PWD)/CORTEX_M4F_STM32F407ZG-SK/Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_dma2d.o \
     $(PWD)/CORTEX_M4F_STM32F407ZG-SK/Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_ltdc.o \
     $(PWD)/CORTEX_M4F_STM32F407ZG-SK/Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_fmc.o \
+    $(PWD)/CORTEX_M4F_STM32F407ZG-SK/Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_rng.o \
     $(PWD)/Utilities/STM32F429I-Discovery/stm32f429i_discovery.o \
     $(PWD)/Utilities/STM32F429I-Discovery/stm32f429i_discovery_sdram.o \
     $(PWD)/Utilities/STM32F429I-Discovery/stm32f429i_discovery_lcd.o \
     $(PWD)/Utilities/STM32F429I-Discovery/stm32f429i_discovery_ioe.o
 
-#Game
-OBJS += $(PWD)/CORTEX_M4F_STM32F407ZG-SK/game/game.o
-CFLAGS += -I $(PWD)/CORTEX_M4F_STM32F407ZG-SK/game
+# Traffic
+OBJS += $(PWD)/CORTEX_M4F_STM32F407ZG-SK/traffic/draw_graph.o
+OBJS += $(PWD)/CORTEX_M4F_STM32F407ZG-SK/traffic/move_car.o
+CFLAGS += -I $(PWD)/CORTEX_M4F_STM32F407ZG-SK/traffic/include
 
 CFLAGS += -DUSE_STDPERIPH_DRIVER
 CFLAGS += -I $(PWD)/CORTEX_M4F_STM32F407ZG-SK \
@@ -122,6 +124,17 @@ $(EXECUTABLE): $(OBJS)
 
 flash:
 	st-flash write $(BIN_IMAGE) 0x8000000
+
+openocd_flash:
+	openocd \
+	-f interface/stlink-v2.cfg \
+	-f target/stm32f4x_stlink.cfg \
+	-c "init" \
+	-c "reset init" \
+	-c "flash probe 0" \
+	-c "flash info 0" \
+	-c "flash write_image erase $(BIN_IMAGE)  0x08000000" \
+	-c "reset run" -c shutdown
 
 .PHONY: clean
 clean:
