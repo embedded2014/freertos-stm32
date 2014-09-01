@@ -26,6 +26,11 @@
   */
 
 /* Includes ------------------------------------------------------------------*/
+#include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
 #include "main.h"
 #include "draw_graph.h"
 #include "move_car.h"
@@ -33,11 +38,6 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "semphr.h"
-
-#include <math.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/

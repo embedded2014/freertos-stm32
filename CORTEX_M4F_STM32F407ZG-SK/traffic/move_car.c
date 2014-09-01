@@ -1,7 +1,8 @@
+#include <stdio.h>
+#include <stdlib.h>
+
 #include "main.h"
 #include "move_car.h"
-
-#include <stdio.h>
 
 static struct car_info car_v_down_list[] = {
 	{0, 0, {CAR_V_DOWN_X, 90, {CAR_WIDTH}, {CAR_HEIGHT}}},

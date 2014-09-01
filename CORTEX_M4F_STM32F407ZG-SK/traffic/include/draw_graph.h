@@ -105,5 +105,6 @@ struct graph_info {
 };
 
 void DrawBackground(void);
+void DrawTrafficLight(int, int);
 
 #endif
