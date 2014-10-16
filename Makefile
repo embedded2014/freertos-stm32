@@ -44,10 +44,10 @@ CFLAGS += -DSTM32F429_439xx
 
 # to run from FLASH
 CFLAGS += -DVECT_TAB_FLASH
-LDFLAGS += -T $(PWD)/CORTEX_M4F_STM32F407ZG-SK/stm32f429zi_flash.ld
+LDFLAGS += -T $(PWD)/CORTEX_M4F_STM32F4/stm32f429zi_flash.ld
 
 # STARTUP FILE
-OBJS += $(PWD)/CORTEX_M4F_STM32F407ZG-SK/startup_stm32f429_439xx.o
+OBJS += $(PWD)/CORTEX_M4F_STM32F4/startup_stm32f429_439xx.o
 
 # STM32F4xx_StdPeriph_Driver
 CFLAGS += -DUSE_STDPERIPH_DRIVER
@@ -55,9 +55,9 @@ CFLAGS += -D"assert_param(expr)=((void)0)"
 
 #My restart
 OBJS += \
-      $(PWD)/CORTEX_M4F_STM32F407ZG-SK/main.o \
-      $(PWD)/CORTEX_M4F_STM32F407ZG-SK/startup/system_stm32f4xx.o \
-      #$(PWD)/CORTEX_M4F_STM32F407ZG-SK/stm32f4xx_it.o \
+      $(PWD)/CORTEX_M4F_STM32F4/main.o \
+      $(PWD)/CORTEX_M4F_STM32F4/startup/system_stm32f4xx.o \
+      #$(PWD)/CORTEX_M4F_STM32F4/stm32f4xx_it.o \
 
 OBJS += \
       $(PWD)/croutine.o \
@@ -70,37 +70,37 @@ OBJS += \
       $(PWD)/portable/MemMang/heap_1.o \
 
 OBJS += \
-    $(PWD)/CORTEX_M4F_STM32F407ZG-SK/Libraries/STM32F4xx_StdPeriph_Driver/src/misc.o \
-    $(PWD)/CORTEX_M4F_STM32F407ZG-SK/Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_gpio.o \
-    $(PWD)/CORTEX_M4F_STM32F407ZG-SK/Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_rcc.o \
-    $(PWD)/CORTEX_M4F_STM32F407ZG-SK/Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_usart.o \
-    $(PWD)/CORTEX_M4F_STM32F407ZG-SK/Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_syscfg.o \
-    $(PWD)/CORTEX_M4F_STM32F407ZG-SK/Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_i2c.o \
-    $(PWD)/CORTEX_M4F_STM32F407ZG-SK/Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_dma.o \
-    $(PWD)/CORTEX_M4F_STM32F407ZG-SK/Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_spi.o \
-    $(PWD)/CORTEX_M4F_STM32F407ZG-SK/Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_exti.o \
-    $(PWD)/CORTEX_M4F_STM32F407ZG-SK/Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_dma2d.o \
-    $(PWD)/CORTEX_M4F_STM32F407ZG-SK/Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_ltdc.o \
-    $(PWD)/CORTEX_M4F_STM32F407ZG-SK/Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_fmc.o \
-    $(PWD)/CORTEX_M4F_STM32F407ZG-SK/Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_rng.o \
+    $(PWD)/CORTEX_M4F_STM32F4/Libraries/STM32F4xx_StdPeriph_Driver/src/misc.o \
+    $(PWD)/CORTEX_M4F_STM32F4/Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_gpio.o \
+    $(PWD)/CORTEX_M4F_STM32F4/Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_rcc.o \
+    $(PWD)/CORTEX_M4F_STM32F4/Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_usart.o \
+    $(PWD)/CORTEX_M4F_STM32F4/Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_syscfg.o \
+    $(PWD)/CORTEX_M4F_STM32F4/Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_i2c.o \
+    $(PWD)/CORTEX_M4F_STM32F4/Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_dma.o \
+    $(PWD)/CORTEX_M4F_STM32F4/Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_spi.o \
+    $(PWD)/CORTEX_M4F_STM32F4/Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_exti.o \
+    $(PWD)/CORTEX_M4F_STM32F4/Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_dma2d.o \
+    $(PWD)/CORTEX_M4F_STM32F4/Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_ltdc.o \
+    $(PWD)/CORTEX_M4F_STM32F4/Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_fmc.o \
+    $(PWD)/CORTEX_M4F_STM32F4/Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_rng.o \
     $(PWD)/Utilities/STM32F429I-Discovery/stm32f429i_discovery.o \
     $(PWD)/Utilities/STM32F429I-Discovery/stm32f429i_discovery_sdram.o \
     $(PWD)/Utilities/STM32F429I-Discovery/stm32f429i_discovery_lcd.o \
     $(PWD)/Utilities/STM32F429I-Discovery/stm32f429i_discovery_ioe.o
 
 # Traffic
-OBJS += $(PWD)/CORTEX_M4F_STM32F407ZG-SK/traffic/draw_graph.o
-OBJS += $(PWD)/CORTEX_M4F_STM32F407ZG-SK/traffic/move_car.o
-CFLAGS += -I $(PWD)/CORTEX_M4F_STM32F407ZG-SK/traffic/include
+OBJS += $(PWD)/CORTEX_M4F_STM32F4/traffic/draw_graph.o
+OBJS += $(PWD)/CORTEX_M4F_STM32F4/traffic/move_car.o
+CFLAGS += -I $(PWD)/CORTEX_M4F_STM32F4/traffic/include
 
 CFLAGS += -DUSE_STDPERIPH_DRIVER
-CFLAGS += -I $(PWD)/CORTEX_M4F_STM32F407ZG-SK \
+CFLAGS += -I $(PWD)/CORTEX_M4F_STM32F4 \
 	  -I $(PWD)/include \
 	  -I $(PWD)/portable/GCC/ARM_CM4F \
-	  -I $(PWD)/CORTEX_M4F_STM32F407ZG-SK/board \
-	  -I $(PWD)/CORTEX_M4F_STM32F407ZG-SK/Libraries/CMSIS/Device/ST/STM32F4xx/Include \
-	  -I $(PWD)/CORTEX_M4F_STM32F407ZG-SK/Libraries/CMSIS/Include \
-	  -I $(PWD)/CORTEX_M4F_STM32F407ZG-SK/Libraries/STM32F4xx_StdPeriph_Driver/inc \
+	  -I $(PWD)/CORTEX_M4F_STM32F4/board \
+	  -I $(PWD)/CORTEX_M4F_STM32F4/Libraries/CMSIS/Device/ST/STM32F4xx/Include \
+	  -I $(PWD)/CORTEX_M4F_STM32F4/Libraries/CMSIS/Include \
+	  -I $(PWD)/CORTEX_M4F_STM32F4/Libraries/STM32F4xx_StdPeriph_Driver/inc \
 	  -I $(PWD)/Utilities/STM32F429I-Discovery
 
 all: $(BIN_IMAGE)
