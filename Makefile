@@ -1,4 +1,4 @@
-PROJECT = usart1
+PROJECT = traffic
 
 EXECUTABLE = $(PROJECT).elf
 BIN_IMAGE = $(PROJECT).bin
