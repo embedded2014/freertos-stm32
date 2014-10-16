@@ -127,8 +127,7 @@ flash:
 
 openocd_flash:
 	openocd \
-	-f interface/stlink-v2.cfg \
-	-f target/stm32f4x_stlink.cfg \
+	-f board/stm32f429discovery.cfg \
 	-c "init" \
 	-c "reset init" \
 	-c "flash probe 0" \
